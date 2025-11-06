@@ -1,0 +1,22 @@
+package view
+
+import "my_app_name/cmd/web/view/component"
+import "my_app_name/cmd/web/viewmodel"
+import "github.com/socle-lab/render"
+
+
+templ Home(td *render.TemplateData, i interface{}) {
+{{vm := i.(*viewmodel.IndexViewModel)}}
+@component.Base(vm.Title, td) {
+
+<img src="/public/img/socle.png" alt="Socle Logo" />
+<h1>Not just another <span style="color: var(--accent)">framework.</span></h1>
+<h1>A <span style="color: var(--accent)">foundation</span> for builders </h1>
+<p>With Socle, and upon this foundation, Build the era of sovereign code.</p>
+
+<a href="https://github.com/socle-lab/socle" target="_blank">
+    Voir sur GitHub →
+</a>
+
+}
+}

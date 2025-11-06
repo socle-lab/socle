@@ -1,0 +1,7 @@
+Project my_project {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Note description
+  '''
+}
+  

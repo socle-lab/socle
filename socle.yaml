@@ -1,0 +1,57 @@
+version: 1.0.0
+name: project_name
+description: "Template with chi, postgres, logger"
+arch: default
+compatible_with: ["socle >= 0.0.1"]
+server:
+  name: ${SERVER_NAME}
+  address: ${SERVER_ADDR}
+defaults: 
+  router: chi
+  render: templ
+modules:
+  web:
+    name: web
+    type: web
+    config: 
+      port: ${WEB_PORT}
+      router: chi
+      render: templ
+      store:
+        enabled: false
+      middlewares: 
+        - request_id
+        - real_ip
+        - recovery
+        - session
+        - ratelimite
+        #- no_surf
+        - maintenance_mode_check
+      security:
+        enabled: false
+        tls:
+          strategy: self # tls strategy can be self(self-signed CA), root(signed by root CA) or le(Let's encrypt)
+          mutual: true
+          ca_cert_name: ca
+          server_cert_name: server
+          client_cert_name: client
+  api:
+    name: API
+    type: api/rest
+    config: 
+      port: ${API_PORT}
+      router: gin
+      store:
+        enabled: true
+      middlewares: 
+        - request_id
+        - real_ip 
+      security:
+        enabled: false
+        tls:
+          strategy: self # tls strategy can be self(self-signed CA), root(signed by root CA) or le(Let's encrypt)
+          mutual: true
+          ca_cert_name: ca
+          server_cert_name: server
+          client_cert_name: client
+    
