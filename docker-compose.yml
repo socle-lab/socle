@@ -26,7 +26,8 @@ services:
     volumes:
       - ./public/:/socle/public/ 
       - ./socle.yaml:/socle/socle.yaml:ro
-      - ./tls.yaml:/socle/tls.yaml:ro
+      # Enable if  self-signed CA TLS is enabled in socle.yaml for this module
+      #- ./tls.yaml:/socle/tls.yaml:ro
     networks:
       - socle
 
@@ -54,7 +55,8 @@ services:
     volumes:
       - ./public/:/socle/public/ 
       - ./socle.yaml:/socle/socle.yaml:ro
-      - ./tls.yaml:/socle/tls.yaml:ro
+      # Enable if  self-signed CA TLS is enabled in socle.yaml for this module
+      #- ./tls.yaml:/socle/tls.yaml:ro
     networks:
       - socle
 
