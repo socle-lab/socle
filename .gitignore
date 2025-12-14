@@ -4,6 +4,9 @@ coverage.out
 .env.*
 !.env.example
 
+./bin/*
+!./bin/cli
+
 tls.yaml
 
 *.crt
