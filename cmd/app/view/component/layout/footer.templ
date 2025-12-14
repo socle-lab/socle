@@ -1,0 +1,14 @@
+package layout
+
+import (
+"fmt"
+"time"
+"github.com/socle-lab/render"
+)
+
+
+templ Footer(td *render.TemplateData) {
+<footer>
+    <div>&copy; { fmt.Sprintf("%d", time.Now().Year()) }</div>
+</footer>
+}

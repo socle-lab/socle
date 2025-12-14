@@ -1,7 +1,51 @@
+DB_URL=
+APP_BINARY_NAME=app
+API_BINARY_NAME=api
+ 	
+build_app:
+	@echo "Building APP..."
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/${APP_BINARY_NAME} ./cmd/app
+	@echo "APP built!"
+
+build_api:
+	@echo "Building API..."
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/${API_BINARY_NAME} ./cmd/api
+	@echo "API built!"
+
+build: build_app build_api
+
 test:
 	@echo "Testing..."
 	@go test ./...
 	@echo "Done!" 
+
+atlas_schema_apply:
+	atlas schema apply \
+	-u "$(DB_URL)" \
+	--to file://scripts/dbdoc/schema.sql \
+	--dev-url "docker://postgres/15" \ 
+
+atlas_schema_inspect:
+	atlas schema inspect \
+	-u "$(DB_URL)" \
+	--web
+
+atlas_migrate_diff:
+	atlas migrate diff initial \
+  	--dir "file://scripts/migrations" \
+  	--to "file://scripts/dbdoc/schema.sql" \
+  	--dev-url "docker://postgres/15" \
+	--format '{{ sql . "  " }}'
+
+atlas_migrate_push:
+	atlas migrate push $(name) \
+	--dev-url "docker://postgres/15/dev"
+
+atlas_migrate_apply:
+	atlas migrate apply --env local
+
+models:
+	go tool sql-to-go -db "$(DB_URL)" -mode separate -package model -output "./internal/model"
 
 sqlc:
 	sqlc generate
@@ -13,7 +57,7 @@ db_schema:
 	dbml2sql --postgres -o scripts/dbdoc/schema.sql scripts/dbdoc/schema.dbml
 
 swag:
-	swag init -g main.go -d cmd/api,internal && swag fmt
+	swag init -g main.go -d $(ENTRIES),internal && swag fmt
 
 ca:
 	bin/crypto create  --algo=$(algo) ca \

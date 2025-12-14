@@ -10,11 +10,11 @@ defaults:
   router: chi
   render: templ
 modules:
-  web:
-    name: web
+  app:
+    name: APP
     type: web
     config: 
-      port: ${WEB_PORT}
+      port: ${APP_PORT}
       router: chi
       render: templ
       store:

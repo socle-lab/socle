@@ -1,0 +1,94 @@
+version: '3'
+
+services:
+
+  socle_app_service:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    container_name: socle_app
+    restart: always
+    ports:
+      #Change these ports
+      - "3000:3000"
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - .env
+    environment: 
+      DATABASE_HOST: ""
+      DATABASE_PORT: ""
+      COOKIE_DOMAIN: ""
+      COOKIE_NAME: ""
+    depends_on:
+      - socle_db_service
+    volumes:
+      - ./public/:/socle/public/ 
+      - ./socle.yaml:/socle/socle.yaml:ro
+      - ./tls.yaml:/socle/tls.yaml:ro
+    networks:
+      - socle
+
+  socle_api_service:
+    build:
+      context: .
+      dockerfile: api.dockerfile
+    container_name: socle_api
+    restart: always
+    ports:
+      #Change these ports
+      - "8000:8000"
+    deploy:
+      mode: replicated
+      replicas: 1
+    env_file:
+      - .env
+    environment: 
+      DATABASE_HOST: ""
+      DATABASE_PORT: ""
+      COOKIE_DOMAIN: ""
+      COOKIE_NAME: ""
+    depends_on:
+      - socle_db_service
+    volumes:
+      - ./public/:/socle/public/ 
+      - ./socle.yaml:/socle/socle.yaml:ro
+      - ./tls.yaml:/socle/tls.yaml:ro
+    networks:
+      - socle
+
+  #start Postgres, and ensure that data is stored to a mounted volume
+  socle_db_service:
+    image: 'postgres:13.4'
+    ports:
+      #Change these ports
+      - "5433:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: socle_db
+    volumes: 
+      - socle_postgres_data:/var/lib/postgresql/data/
+    networks:
+      - socle
+
+  #  start Redis, and ensure that data is stored to a mounted volume
+  socle_redis:
+    image: 'redis:alpine'
+    ports:
+      - "6488:6379"
+    restart: always
+    volumes:
+      - socle_redis_data:/data
+    networks:
+      - socle
+
+networks:
+  socle:
+    driver: bridge
+
+volumes:
+  socle_postgres_data:
+  socle_redis_data:

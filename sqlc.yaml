@@ -1,9 +1,9 @@
 version: "1"
 packages:
-  - name: "store"
-    path: "./internal/store/static"
-    queries: "./internal/store/static/query/"
-    schema: "./migrations/"
+  - name: "sqlc_store"
+    path: "./internal/store/sqlc"
+    queries: "./internal/store/sqlc/query/"
+    schema: "./scripts/migrations/"
     engine: "postgresql"
     emit_json_tags: true
     emit_prepared_queries: true

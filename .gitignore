@@ -1,8 +1,11 @@
 .idea
 coverage.out
+.env
+.env.*
+!.env.example
 
 tls.yaml
-.env
+
 *.crt
 *.key
 *.p12
